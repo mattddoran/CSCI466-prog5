@@ -75,6 +75,24 @@ class NetworkPacket:
         dst = byte_S[0 : NetworkPacket.dst_S_length].strip('0')
         data_S = byte_S[NetworkPacket.dst_S_length : ]        
         return self(dst, data_S)
+
+class MPLSPacket:
+    def __init__(self, packet, type_S="M"):
+        self.type_S = type_S
+        self.packet = packet
+
+    def __str__(self):
+        return self.to_byte_S()
+
+    def to_byte_S(self):
+        byte_S = self.type_S
+        byte_S += NetworkPacket.to_byte_S(self.packet)
+        return byte_S
+
+    def from_byte_S(self, byte_S):
+        type_S = byte_S[0]
+        packet = NetworkPacket.from_byte_S(byte_S[1:])
+        return self(packet, type_S)
     
 
 ## Implements a network host for receiving and transmitting data

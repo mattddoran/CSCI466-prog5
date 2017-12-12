@@ -7,7 +7,7 @@ from copy import deepcopy
 
 ##configuration parameters
 router_queue_size = 0 #0 means unlimited
-simulation_time = 10 #give the network sufficient time to execute transfers
+simulation_time = 15 #give the network sufficient time to execute transfers
 
 if __name__ == '__main__':
     object_L = [] #keeps track of objects, so we can kill their threads at the end
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     
     #create routers and routing tables for connected clients (subnets)
     encap_tbl_D = {('RA',0):1}    # table used to encapsulate network packets into MPLS frames
-    frwd_tbl_D = {}     # table used to forward MPLS frames
+    frwd_tbl_D = {('RA'):('RB',0, 1)}     # Key(in label) -> Result(out label, destination interface, out interface)
     decap_tbl_D = {}    # table used to decapsulate network packets from MPLS frames
     router_a = Router(name='RA', 
                               intf_capacity_L=[500,500],

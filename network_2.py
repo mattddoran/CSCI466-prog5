@@ -238,13 +238,14 @@ class Router:
         print("*********** interface: ", self)
         print("*********** interface number: ", i)
         print('%s: processing MPLS frame "%s"' % (self, m_fr))
+        print("UOUUOUUOOUOOUUOUOUOUOUOUOUOUUOOUUO", self, " ", i)
         if self.decap_tbl_D.get((str(self), i),"no") != "no": #check if the (interface, interface_number) is in the encap dict
             print("* * * ** **** ** * * **** ** * ** ** * * *  let's decapsulate")
             byte_s = m_fr.to_byte_S()
             pkt = NetworkPacket.from_byte_S(byte_s[3:])
             print("THIS IS THE PACKET", pkt)
             fr = LinkFrame('Network', pkt.to_byte_S())
-            self.intf_L[1].put(fr.to_byte_S(), 'out', True)
+            self.intf_L[2].put(fr.to_byte_S(), 'out', True)
 
         # for now forward the frame out interface 1
         else:

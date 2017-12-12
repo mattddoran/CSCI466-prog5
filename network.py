@@ -231,14 +231,23 @@ class Router:
     def process_MPLS_frame(self, m_fr, i):
         #TODO: implement MPLS forward, or MPLS decapsulation if this is the last hop router for the path
         print('%s: processing MPLS frame "%s"' % (self, m_fr))
-        # for now forward the frame out interface 1
-        try:
-            fr = LinkFrame('MPLS', m_fr.to_byte_S())
+        if self.decap_tbl_D.get((str(self), i),"no") != "no": #check if the (interface, interface_number) is in the encap dict
+            print("* * * ** **** ** * * **** ** * ** ** * * *  let's decapsulate")
+            byte_s = m_fr.to_byte_S()
+            pkt = NetworkPacket.from_byte_S(byte_s)
+            print("THIS IS THE PACKET", pkt)
+            fr = LinkFrame('Network', pkt.to_byte_S())
             self.intf_L[1].put(fr.to_byte_S(), 'out', True)
-            print('%s: forwarding frame "%s" from interface %d to %d' % (self, fr, i, 1))
-        except queue.Full:
-            print('%s: frame "%s" lost on interface %d' % (self, p, i))
-            pass
+
+        # for now forward the frame out interface 1
+        else:
+            try:
+                fr = LinkFrame('MPLS', m_fr.to_byte_S())
+                self.intf_L[1].put(fr.to_byte_S(), 'out', True)
+                print('%s: forwarding frame "%s" from interface %d to %d' % (self, fr, i, 1))
+            except queue.Full:
+                print('%s: frame "%s" lost on interface %d' % (self, p, i))
+                pass
         
                 
     ## thread target for the host to keep forwarding data

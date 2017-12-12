@@ -1,6 +1,6 @@
 import queue
 import threading
-from link import LinkFrame
+from link_2 import LinkFrame
 
 
 ## wrapper class for a queue of packets

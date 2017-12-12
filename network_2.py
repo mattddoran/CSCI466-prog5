@@ -209,8 +209,8 @@ class Router:
     def process_network_packet(self, pkt, i):
         #TODO: encapsulate the packet in an MPLS frame based on self.encap_tbl_D
         #print("process_network_packet being called: ", self, pkt)
-        print("*********** interface: ", self)
-        print("*********** interface number: ", i)
+        #print("*********** interface: ", self)
+        #print("*********** interface number: ", i)
         if self.encap_tbl_D.get((str(self), i),"no") != "no": #check if the (interface, interface_number) is in the encap dict
             print("*#*#*#*#*#**#*#*#*#*##**#*# let's encapsulate")
             labelTuple = self.frwd_tbl_D[str(self)+str(i)]
@@ -235,10 +235,10 @@ class Router:
     #  @param i Incoming interface number for the frame
     def process_MPLS_frame(self, m_fr, i):
         #TODO: implement MPLS forward, or MPLS decapsulation if this is the last hop router for the path
-        print("*********** interface: ", self)
-        print("*********** interface number: ", i)
+        #print("*********** interface: ", self)
+        #print("*********** interface number: ", i)
         print('%s: processing MPLS frame "%s"' % (self, m_fr))
-        print("UOUUOUUOOUOOUUOUOUOUOUOUOUOUUOOUUO", self, " ", i)
+        #print("UOUUOUUOOUOOUUOUOUOUOUOUOUOUUOOUUO", self, " ", i)
         if self.decap_tbl_D.get((str(self), i),"no") != "no": #check if the (interface, interface_number) is in the encap dict
             print("* * * ** **** ** * * **** ** * ** ** * * *  let's decapsulate")
             byte_s = m_fr.to_byte_S()
@@ -251,7 +251,7 @@ class Router:
         else:
             try:
                 label = m_fr.get_Label()
-                print(' %% % % % % % % % % %  % % % % % % %  %%', label)
+                #print(' %% % % % % % % % % %  % % % % % % %  %%', label)
                 interface_n = self.frwd_tbl_D[str(self)+str(i)][2]
                 fr = LinkFrame('MPLS', m_fr.to_byte_S())
                 self.intf_L[interface_n].put(fr.to_byte_S(), 'out', True)

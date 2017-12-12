@@ -22,8 +22,8 @@ if __name__ == '__main__':
 
     
     #create routers and routing tables for connected clients (subnets)
-    encap_tbl_D = {('RA0',0):1,('RA1',1):1}    # table used to encapsulate network packets into MPLS frames
-    frwd_tbl_D = {('RA'):('RB',0, 2), ('RA'):('RC',0, 3)}     # Key(in label) -> Result(out label, destination interface, out interface)
+    encap_tbl_D = {('RA',0):1,('RA',1):1}    # table used to encapsulate network packets into MPLS frames
+    frwd_tbl_D = {('RA0'):('RB',0, 2), ('RA1'):('RC',0, 3)}     # Key(in label) -> Result(out label, destination interface, out interface)
     decap_tbl_D = {}    # table used to decapsulate network packets from MPLS frames
     router_a = Router(name='RA', 
                               intf_capacity_L=[500,500,500,500],
@@ -34,10 +34,10 @@ if __name__ == '__main__':
     object_L.append(router_a)
 
     encap_tbl_D = {}    
-    frwd_tbl_D = {('RB0'):('RD',0, 2)}     
+    frwd_tbl_D = {('RB0'):('RD',0, 1)}     
     decap_tbl_D = {}    
     router_b = Router(name='RB', 
-                              intf_capacity_L=[500,100],
+                              intf_capacity_L=[500,500],
                               encap_tbl_D = encap_tbl_D,
                               frwd_tbl_D = frwd_tbl_D,
                               decap_tbl_D = decap_tbl_D,
@@ -45,10 +45,10 @@ if __name__ == '__main__':
     object_L.append(router_b)
 
     encap_tbl_D = {}    
-    frwd_tbl_D = {('RC0'):('RD',1, 2)}     
+    frwd_tbl_D = {('RC0'):('RD',1, 1)}     
     decap_tbl_D = {}    
     router_c = Router(name='RC', 
-                              intf_capacity_L=[500,100],
+                              intf_capacity_L=[500,500],
                               encap_tbl_D = encap_tbl_D,
                               frwd_tbl_D = frwd_tbl_D,
                               decap_tbl_D = decap_tbl_D,
@@ -59,7 +59,7 @@ if __name__ == '__main__':
     frwd_tbl_D = {}     
     decap_tbl_D = {('RD',0):2, ('RD',1):2}
     router_d = Router(name='RD', 
-                              intf_capacity_L=[500,100,500],
+                              intf_capacity_L=[500,500,100],
                               encap_tbl_D = encap_tbl_D,
                               frwd_tbl_D = frwd_tbl_D,
                               decap_tbl_D = decap_tbl_D,
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     link_layer.add_link(Link(router_a, 3, router_c, 0))
     link_layer.add_link(Link(router_b, 1, router_d, 0))
     link_layer.add_link(Link(router_c, 1, router_d, 1))
-    link_layer.add_link(Link(router_d, 2, host_3, 1)) 
+    link_layer.add_link(Link(router_d, 2, host_3, 0)) 
     
     #start all the objects
     thread_L = []
@@ -88,7 +88,7 @@ if __name__ == '__main__':
         t.start()
     
     #create some send events    
-    for i in range(5):
+    for i in range(1):
         priority = i%2
         host_1.udt_send('H3', 'MESSAGE_%d_FROM_H1' % i, priority)
         host_2.udt_send('H3', 'MESSAGE_%d_FROM_H2' % i, priority)

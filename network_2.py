@@ -213,7 +213,7 @@ class Router:
         print("*********** interface number: ", i)
         if self.encap_tbl_D.get((str(self), i),"no") != "no": #check if the (interface, interface_number) is in the encap dict
             print("*#*#*#*#*#**#*#*#*#*##**#*# let's encapsulate")
-            labelTuple = self.frwd_tbl_D[str(self)]
+            labelTuple = self.frwd_tbl_D[str(self)+str(i)]
             label = labelTuple[0]+str(labelTuple[1])
             m_fr = MPLSFrame(pkt, label)
             print('%s: encapsulated packet "%s" as MPLS frame "%s"' % (self, pkt, m_fr))
@@ -251,10 +251,10 @@ class Router:
             try:
                 label = m_fr.get_Label()
                 print(' %% % % % % % % % % %  % % % % % % %  %%', label)
-                interface_n = self.frwd_tbl_D[str(self)][2]
+                interface_n = self.frwd_tbl_D[str(self)+str(i)][2]
                 fr = LinkFrame('MPLS', m_fr.to_byte_S())
                 self.intf_L[interface_n].put(fr.to_byte_S(), 'out', True)
-                print('%s: forwarding frame "%s" from interface %d to %d' % (self, fr, i, 1))
+                print('%s: forwarding frame "%s" from interface %d to %d' % (self, fr, interface_n, 1))
             except queue.Full:
                 print('%s: frame "%s" lost on interface %d' % (self, p, i))
                 pass
